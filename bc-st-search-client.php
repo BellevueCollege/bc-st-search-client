@@ -46,6 +46,7 @@ return <<<HTML
 <div id="st-results-container" style="margin-top:1em"></div>
 <div id="st-pagination-container"></div>
 <script type="text/javascript">
+
 jQuery( function() {
 	if ( '{$query}' != '' ) {
 		ajax_call( '{$query}', '{$page}' );
@@ -162,7 +163,7 @@ add_shortcode( 'bc-swiftype-search', 'bcswiftype_shortcode' );
  * https://mikejolley.com/2013/12/02/sensible-script-enqueuing-shortcodes/
  **/
 function bcswiftype_scripts() {
-	wp_register_script( 'bcswiftype_script', plugin_dir_url( __FILE__ ) . 'js/bcswiftype.js', array( 'jquery' ), "0.0.0", true );
+	wp_register_script( 'bcswiftype_script', plugin_dir_url( __FILE__ ) . 'js/bcswiftype.js', array( 'jquery', 'bootstrap', 'globals' ), "0.0.0", true );
 	wp_register_style( 'bcswiftype_style', plugin_dir_url( __FILE__ ) . 'css/bcswiftype.css' );
 	wp_enqueue_style( 'bcswiftype_style' );
 	wp_enqueue_script( 'bcswiftype_script' );

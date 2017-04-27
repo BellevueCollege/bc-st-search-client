@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/BellevueCollege/bc-st-search-client#readme",
   "napa": {
-    "swiftype-autocomplete-jquery": "swiftype/swiftype-autocomplete-jquery"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
