@@ -1,0 +1,12 @@
+#results-container em {
+	font-style: normal;
+	font-weight: bold;
+}
+#results-container  h2 {
+	font-size: 1.3em;
+	margin-bottom: 0;
+}
+
+#results-container  p {
+	margin: 0;
+}
