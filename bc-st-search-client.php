@@ -27,7 +27,6 @@ function bcswiftype_shortcode( $sc_config ) {
 		'spelling'         => 'always'
 	), $sc_config, 'bcswiftype_shortcode' );
 
-	
 
 	require( 'classes/class.view.php' );
 	require( 'classes/class.model.php' );
@@ -35,7 +34,6 @@ function bcswiftype_shortcode( $sc_config ) {
 
 	$model = new BCswiftype_Model( $sc_config );
 	$controller = new BCswiftype_Controller( $model );
-	
 	$view = new BCswiftype_View( $model );
 	return $view->render_html();
 

@@ -12,16 +12,11 @@ class BCswiftype_Controller {
 	public function __construct( $model ) {
 		$this->model = $model;
 
-		// Get queries
-		$query = $this->get_url_peram( $model->get_setting( 'query_peram' ), 'string', '' );
-		$page  = $this->get_url_peram( $model->get_setting( 'page_num_peram' ), 'int', 1 );
-		$sites = $this->get_url_peram( $model->get_setting( 'site_peram' ), 'array', false );
-
-		// Perams
+		// Get queries and set perams
 		$args = array( 
-			'query' => $query,
-			'page'  => $page,
-			'sites' => $sites,
+			'query' => $this->get_url_peram( $model->get_setting( 'query_peram' ), 'string', '' ),
+			'page'  => $this->get_url_peram( $model->get_setting( 'page_num_peram' ), 'int', 1 ),
+			'sites' => $this->get_url_peram( $model->get_setting( 'site_peram' ), 'array', false )
 		);
 
 		// Load results if there is a query
@@ -186,7 +181,7 @@ class BCswiftype_Controller {
 			'num_pages'     => intval ($data_json['info']['page']['num_pages'] ),
 			'per_page'      => intval ($data_json['info']['page']['per_page'] ),
 			'total_results' => intval ($data_json['info']['page']['total_result_count'] ),
-			'errors'        => $data_json['errors']
+			'errors'        => $data_json['errors'] // should sanatize if possible
 		);
 
 		// Store to Model
