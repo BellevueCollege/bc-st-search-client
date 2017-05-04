@@ -67,13 +67,13 @@ class BCswiftype_View {
 
 		// Build HTML
 		if ( $atts['current_page'] > 1 ) {
-			$prev_html = '<li><a href="' . $this->page_url( $atts['current_page'] - 1 ) . '"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Previous</a></li> ';
+			$prev_html = '<li><a href="' . $this->page_url( $atts['current_page'] - 1, false ) . '"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Previous</a></li> ';
 		} else {
 			$prev_html = '<li class="disabled"><a><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Previous</a></li> ';
 		}
 
 		if ( $atts['current_page'] < $atts['num_pages'] ) {
-			$next_html = '<li><a href="' . $this->page_url( $atts['current_page'] + 1 ) . '">Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>';
+			$next_html = '<li><a href="' . $this->page_url( $atts['current_page'] + 1, false ) . '">Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>';
 		} else {
 			$next_html = '<li class="disabled"><a>Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>';
 		}
@@ -127,7 +127,7 @@ class BCswiftype_View {
 			<label class="sr-only" for="st-search-input">Search</label>
 			<div class="input-group input-group-lg">
 				{$filter_tags}
-				<input id="st-search-input" type="search" class="form-control" name="txtQuery" value="{$query}" placeholder="What can we help you find?" />
+				<input id="st-search-input" type="search" class="form-control" name="{$this->model->get_setting( 'query_peram' )}" value="{$query}" placeholder="What can we help you find?" />
 				<span class="input-group-btn">
 					<button class="btn btn-primary" type="submit">Search</button>
 				</span>
@@ -148,7 +148,7 @@ HTML;
 	 *
 	 * Accepts page number, and handles generating next and previous page URLs
 	 **/
-	protected function page_url( $page, $strip_sites = true ) {
+	protected function page_url( $page, $strip_sites = false ) {
 		$query = $_GET;
 		// replace parameter(s)
 		$query[$this->model->get_setting( 'page_num_peram' )] = $page;
@@ -174,7 +174,7 @@ HTML;
 			foreach( $sites as $site ) {
 				$output .= "<span class='label label-default'>$site</span> ";
 			}
-			$output .= '<a class="btn btn-default btn-xs" href="' . $this->page_url( $this->model->get_attribute( 'current_page', false ) ) . '"<span class=""><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> search all</span></a>';
+			$output .= '<a class="btn btn-default btn-xs" href="' . $this->page_url( 1, true ) . '"<span class=""><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> search all</span></a>';
 			return $output;
 		}
 	}
@@ -190,7 +190,8 @@ HTML;
 		// Look for errors in the model's error array
 		if ( is_array( $this->model->errors ) ) {
 			foreach ( $this->model->errors as $error ) {
-				$error_html .= '<p class="alert alert-danger">' . $error->get_error_message() . '</p>';
+				$error = $error->get_error_message();
+				$error_html .= '<p class="alert alert-danger">' . $error . '</p>';
 				error_log( "Swiftype Search Error: $error ", 0);
 			}
 		}
