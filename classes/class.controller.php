@@ -1,5 +1,5 @@
-<?php 
-defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+<?php
+defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 class BCswiftype_Controller {
 	private $model;
 
@@ -7,20 +7,20 @@ class BCswiftype_Controller {
 	 * Constructor
 	 *
 	 * Accept model and make it available for future use
-	 * Loads query perameters, 
+	 * Loads query perameters
 	 **/
 	public function __construct( $model ) {
 		$this->model = $model;
 
 		// Get queries and set perams
-		$args = array( 
+		$args = array(
 			'query' => $this->get_url_peram( $model->get_setting( 'query_peram' ), 'string', '' ),
 			'page'  => $this->get_url_peram( $model->get_setting( 'page_num_peram' ), 'int', 1 ),
-			'sites' => $this->get_url_peram( $model->get_setting( 'site_peram' ), 'array', false )
+			'sites' => $this->get_url_peram( $model->get_setting( 'site_peram' ), 'array', false ),
 		);
 
 		// Load results if there is a query
-		if ( !$model->get_results() AND $args[ 'query' ] ) {
+		if ( ! $model->get_results() && $args['query'] ) {
 			$results = $this->load_results( $args );
 
 			// Check if an error is returned
@@ -41,11 +41,11 @@ class BCswiftype_Controller {
 	 * Get URL Peram
 	 *
 	 * Accept perameter key, type (array or int, defaults to string),
-	 * and a default value to return. 
+	 * and a default value to return.
 	 *
 	 * Looks up URL peram by key and returns it if it exists and is valid.
 	 *
-	 * Truncates to prevent overly long queries and page numbers. 
+	 * Truncates to prevent overly long queries and page numbers.
 	 *
 	 **/
 	protected function get_url_peram( $key, $type, $default = false ) {
@@ -53,15 +53,14 @@ class BCswiftype_Controller {
 			$raw = $_GET[ $key ];
 			$safe;
 
-			if ( $type == 'array' ) {
+			if ( 'array' === $type ) {
 				$safe = array_map( 'sanitize_text_field', $raw );
 
-			} else if ( $type == 'int' ) {
+			} elseif ( 'int' === $type ) {
 				$safe = intval( $raw );
 				if ( $safe > 256 ) { // Arbitrary number
 					$safe = 256;
 				}
-
 			} else {
 				$safe = sanitize_text_field( $raw );
 
@@ -69,7 +68,7 @@ class BCswiftype_Controller {
 					$safe = substr( $safe, 0, 255 );
 				}
 			}
-			return $safe; 
+			return $safe;
 		} else {
 			return $default;
 		}
@@ -81,7 +80,7 @@ class BCswiftype_Controller {
 	 * Accepts arguments and returns JSON from API
 	 *
 	 * This is the guts of the application - changing target API happens here
-	 *  
+	 *
 	 **/
 	public function load_results( $args ) {
 
@@ -98,26 +97,26 @@ class BCswiftype_Controller {
 				'page' => array(
 					'title' => array(
 						'size' => $args['title_len'],
-						'fallback' => true
+						'fallback' => true,
 					),
 					'body' => array(
 						'size' => $args['excerpt_len'],
-						'fallback' => true
-					)
-				)
+						'fallback' => true,
+					),
+				),
 			),
-			'spelling' => $args['spelling']
+			'spelling' => $args['spelling'],
 		);
 
 		// Add filters to array if needed
 		if ( $args['sites'] ) {
 			$postfields_array['filters'] = array(
 				'page' => array(
-					$args['site_api_key'] => $args['sites']
-				)
+					$args['site_api_key'] => $args['sites'],
+				),
 			);
 		}
-		
+
 		// Encode as JSON before sending
 		$postfields = json_encode( $postfields_array );
 
@@ -125,12 +124,12 @@ class BCswiftype_Controller {
 		$curl = curl_init();
 		curl_setopt_array( $curl, array(
 			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_CONNECTTIMEOUT => 2, 
+			CURLOPT_CONNECTTIMEOUT => 2,
 			CURLOPT_URL            => $args['engine_url'],
 			CURLOPT_POST           => true,
 			CURLOPT_HTTPHEADER     => array( 'Content-Type: application/json' ),
 			CURLOPT_POSTFIELDS     => $postfields,
-			CURLOPT_FAILONERROR    => true
+			CURLOPT_FAILONERROR    => true,
 		));
 
 		// Get data
@@ -138,7 +137,7 @@ class BCswiftype_Controller {
 
 		// Catch CURL errors
 		if ( curl_error( $curl ) ) {
-			return new WP_Error( 'curl_error', __( 'CURL Error: ' . curl_error( $curl ), 'bcswiftype' ) );
+			return new WP_Error( 'curl_error', 'CURL Error: ' . curl_error( $curl, 'bcswiftype' ) );
 		}
 
 		// Close connection
@@ -164,13 +163,13 @@ class BCswiftype_Controller {
 
 			// Check if highlight is available; if not, truncate and use title/body. This shouldn't be needed.
 			$title   = wp_kses( ( isset( $result['highlight']['title'] ) ? $result['highlight']['title'] : substr( $result['title'], 0,  $this->model->get_setting( 'title_len' ) ) ), wp_kses_allowed_html( 'post' ) );
-			$excerpt = wp_kses( ( isset( $result['highlight']['body'] ) ? $result['highlight']['body'] : '<!--fallback-->' .substr( $result['body'], 0,  $this->model->get_setting( 'excerpt_len' ) ) ), wp_kses_allowed_html( 'post' ) );
+			$excerpt = wp_kses( ( isset( $result['highlight']['body'] ) ? $result['highlight']['body'] : '<!--fallback-->' . substr( $result['body'], 0,  $this->model->get_setting( 'excerpt_len' ) ) ), wp_kses_allowed_html( 'post' ) );
 
 			$results_processed[] = array(
 				'title'    => $title,
 				'excerpt'  => $excerpt,
 				'url'      => esc_url( $result['url'] ),
-				'updated'  => sanitize_text_field( $result['published_at'] )
+				'updated'  => sanitize_text_field( $result['published_at'] ),
 			);
 		}
 
@@ -178,10 +177,10 @@ class BCswiftype_Controller {
 		$atts_processed = array(
 			'query'         => sanitize_text_field( $data_json['info']['page']['query'] ),
 			'current_page'  => intval( $data_json['info']['page']['current_page'] ),
-			'num_pages'     => intval ($data_json['info']['page']['num_pages'] ),
-			'per_page'      => intval ($data_json['info']['page']['per_page'] ),
-			'total_results' => intval ($data_json['info']['page']['total_result_count'] ),
-			'errors'        => $data_json['errors'] // should sanatize if possible
+			'num_pages'     => intval( $data_json['info']['page']['num_pages'] ),
+			'per_page'      => intval( $data_json['info']['page']['per_page'] ),
+			'total_results' => intval( $data_json['info']['page']['total_result_count'] ),
+			'errors'        => $data_json['errors'], // should sanatize if possible
 		);
 
 		// Store to Model

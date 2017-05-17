@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 class BCswiftype_View {
 	private $model;
 
@@ -19,28 +19,27 @@ class BCswiftype_View {
 	 **/
 	public function render_html() {
 		// Print-ready version of query
-		$query = stripslashes( $this->model->get_attribute('query') );
+		$query = stripslashes( $this->model->get_attribute( 'query' ) );
 
 		// Instantiate output
 		$output = '';
 
 		// Errors
-		$output .= $this->render_api_errors( $this->model->get_attribute('errors') );
+		$output .= $this->render_api_errors( $this->model->get_attribute( 'errors' ) );
 
 		// Searchbox html
-		$output .= $this->render_searchbox( $query, $this->model->get_attribute('sites') );
+		$output .= $this->render_searchbox( $query, $this->model->get_attribute( 'sites' ) );
 
 		// Results html
 		if ( $this->model->get_attribute( 'query' ) ) {
-			$output .= '<p style="margin-top: 1em">Found ' . $this->model->get_attribute( 'total_results' ) . ' results for <strong>' . 
-				$query . '</strong> ' . $this->render_sites_filter( $this->model->get_attribute('sites') ) . '</p>';
-			
-			
+			$output .= '<p style="margin-top: 1em">Found ' . $this->model->get_attribute( 'total_results' ) . ' results for <strong>' .
+				$query . '</strong> ' . $this->render_sites_filter( $this->model->get_attribute( 'sites' ) ) . '</p>';
+
 			if ( $this->model->get_results() ) {
 				$output .= '<div id="results-container">' . $this->render_results() . '</div>';
 
 				// Pagination html
-				if ( $this->model->get_attribute('total_results') > $this->model->get_attribute('per_page') ) {
+				if ( $this->model->get_attribute( 'total_results' ) > $this->model->get_attribute( 'per_page' ) ) {
 					$output .= $this->render_pagination();
 				}
 			} else {
@@ -61,7 +60,6 @@ class BCswiftype_View {
 	 **/
 	protected function render_pagination() {
 		$atts = $this->model->get_attributes();
-		
 		$prev_html;
 		$next_html;
 
@@ -94,12 +92,12 @@ class BCswiftype_View {
 				$title = $result['title'];
 				$body = $result['excerpt'];
 				$url = $result['url'];
-				$updated = date( "F d, Y", strtotime( $result['updated'] ) );
+				$updated = date( 'F d, Y', strtotime( $result['updated'] ) );
 				$result_list .= "<h2><a href='$url'>$title</a></h2><p class='text-success'>$updated &mdash; $url</p><p>$body</p>";
 			}
 			return $result_list;
 		} else {
-			return false; 
+			return false;
 		}
 	}
 
@@ -111,15 +109,15 @@ class BCswiftype_View {
 	protected function render_searchbox( $query = '', $filters ) {
 		$filter_tags = '';
 		$script_perams = 'engineKey: "' . $this->model->get_setting( 'engine_key' ) . '"';
-		if ( is_array( $filters ) ) {	
+		if ( is_array( $filters ) ) {
 			// Build hidden inputs to preserve filter status
 			foreach ( $filters as $filter ) {
 				$filter_tags .= '<input type="hidden" name="' . $this->model->get_setting( 'site_peram' ) . '[]" value="' . $filter . '" />';
 			}
 
 			//Build filter js perams
-			$script_perams = $script_perams . 
-			', filters: {"page": {"' . $this->model->get_setting( 'site_api_key' ) . '" : ["' . implode('", "', $filters) . '"]}} ';
+			$script_perams = $script_perams .
+			', filters: {"page": {"' . $this->model->get_setting( 'site_api_key' ) . '" : ["' . implode( '", "', $filters ) . '"]}} ';
 		}
 
 		return <<<HTML
@@ -151,16 +149,16 @@ HTML;
 	protected function page_url( $page, $strip_sites = false ) {
 		$query = $_GET;
 		// replace parameter(s)
-		$query[$this->model->get_setting( 'page_num_peram' )] = $page;
+		$query[ $this->model->get_setting( 'page_num_peram' ) ] = $page;
 
 		// strip sites perameters if requested
-		if ( $strip_sites AND isset( $query[ $this->model->get_setting( 'site_peram' ) ] ) ) {
+		if ( $strip_sites && isset( $query[ $this->model->get_setting( 'site_peram' ) ] ) ) {
 			unset( $query[ $this->model->get_setting( 'site_peram' ) ] );
 		}
 		// rebuild url
 		$query_result = http_build_query( $query );
 		// new link
-		return '?'. htmlentities( $query_result );
+		return '?' . htmlentities( $query_result );
 	}
 
 	/**
@@ -171,7 +169,7 @@ HTML;
 	protected function render_sites_filter( $sites ) {
 		if ( $sites ) {
 			$output = 'on the sites: ';
-			foreach( $sites as $site ) {
+			foreach ( $sites as $site ) {
 				$output .= "<span class='label label-default'>$site</span> ";
 			}
 			$output .= '<a class="btn btn-default btn-xs" href="' . $this->page_url( 1, true ) . '"<span class=""><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> search all</span></a>';
@@ -192,7 +190,7 @@ HTML;
 			foreach ( $this->model->errors as $error ) {
 				$error = $error->get_error_message();
 				$error_html .= '<p class="alert alert-danger">' . $error . '</p>';
-				error_log( "Swiftype Search Error: $error ", 0);
+				error_log( "Swiftype Search Error: $error ", 0 );
 			}
 		}
 
@@ -201,7 +199,7 @@ HTML;
 			foreach ( $errors as $error ) {
 				$error = print_r( $error, true );
 				$error_html .= "<div class='alert alert-warning'><strong>Swiftype API Error:</strong> <pre>$error</pre></div>";
-				error_log( "Swiftype Search API Error: $error ", 0);
+				error_log( "Swiftype Search API Error: $error ", 0 );
 			}
 		}
 		return $error_html;
