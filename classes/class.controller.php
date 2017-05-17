@@ -117,34 +117,23 @@ class BCswiftype_Controller {
 			);
 		}
 
-		// Encode as JSON before sending
-		$postfields = json_encode( $postfields_array );
+		// Do things with WP Instead
+		$data_raw = wp_safe_remote_post(
+			$args['engine_url'],
+			array(
+				'method'      => 'POST',
+				'timeout'     => 2,
+				'redirection' => 3,
+				'httpversion' => '1.0',
+				'blocking'    => true,
+				'headers'     => array( 'Content-Type: application/json' ),
+				'body'        => $postfields_array,
+				'compress'    => true,
+				'sslverify'   => true,
+			)
+		);
 
-		// Load from API via CURL
-		$curl = curl_init();
-		curl_setopt_array( $curl, array(
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_CONNECTTIMEOUT => 2,
-			CURLOPT_URL            => $args['engine_url'],
-			CURLOPT_POST           => true,
-			CURLOPT_HTTPHEADER     => array( 'Content-Type: application/json' ),
-			CURLOPT_POSTFIELDS     => $postfields,
-			CURLOPT_FAILONERROR    => true,
-		));
-
-		// Get data
-		$data_raw = curl_exec( $curl );
-
-		// Catch CURL errors
-		if ( curl_error( $curl ) ) {
-			return new WP_Error( 'curl_error', 'CURL Error: ' . curl_error( $curl, 'bcswiftype' ) );
-		}
-
-		// Close connection
-		curl_close( $curl );
-
-		// Decode JSON to array
-		return json_decode( $data_raw, true );
+		return $data_raw;
 
 	}
 
@@ -155,8 +144,11 @@ class BCswiftype_Controller {
      *
      **/
 	protected function store_results( $data_json ) {
+		// Decode JSON response
+		$data_array = json_decode( wp_remote_retrieve_body( $data_json ), true );
+
 		// Restructure Results
-		$results = $data_json['records']['page'];
+		$results = $data_array['records']['page'];
 
 		$results_processed = array();
 		foreach ( $results as $result ) {
@@ -175,12 +167,12 @@ class BCswiftype_Controller {
 
 		// Restructure Attributes
 		$atts_processed = array(
-			'query'         => sanitize_text_field( $data_json['info']['page']['query'] ),
-			'current_page'  => intval( $data_json['info']['page']['current_page'] ),
-			'num_pages'     => intval( $data_json['info']['page']['num_pages'] ),
-			'per_page'      => intval( $data_json['info']['page']['per_page'] ),
-			'total_results' => intval( $data_json['info']['page']['total_result_count'] ),
-			'errors'        => $data_json['errors'], // should sanatize if possible
+			'query'         => sanitize_text_field( $data_array['info']['page']['query'] ),
+			'current_page'  => intval( $data_array['info']['page']['current_page'] ),
+			'num_pages'     => intval( $data_array['info']['page']['num_pages'] ),
+			'per_page'      => intval( $data_array['info']['page']['per_page'] ),
+			'total_results' => intval( $data_array['info']['page']['total_result_count'] ),
+			'errors'        => $data_array['errors'], // should sanatize if possible
 		);
 
 		// Store to Model
