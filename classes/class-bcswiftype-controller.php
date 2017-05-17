@@ -32,7 +32,9 @@ class BCswiftype_Controller {
 				$this->store_results( $results );
 
 				// Store sites in model, because filters aren't returned by API
-				$this->model->add_attributes( array( 'sites' => $args['sites'] ) );
+				$this->model->add_attributes( array(
+					'sites' => $args['sites'],
+				) );
 			}
 		}
 	}
@@ -50,7 +52,7 @@ class BCswiftype_Controller {
 	 **/
 	protected function get_url_peram( $key, $type, $default = false ) {
 		if ( isset( $_GET[ $key ] ) ) {
-			$raw = $_GET[ $key ];
+			$raw = $_GET[ $key ]; // This throws wpcs error- no way around it
 			$safe;
 
 			if ( 'array' === $type ) {
