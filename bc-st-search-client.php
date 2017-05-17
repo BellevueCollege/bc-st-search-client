@@ -46,11 +46,8 @@ add_shortcode( 'bc-swiftype-search', 'bcswiftype_shortcode' );
  * https://mikejolley.com/2013/12/02/sensible-script-enqueuing-shortcodes/
  **/
 function bcswiftype_scripts() {
-
-	wp_register_script( 'bcswiftype_script', plugin_dir_url( __FILE__ ) . 'js/bcswiftype.js', array( 'jquery' ), "0.0.0", false );
 	wp_register_style( 'bcswiftype_style', plugin_dir_url( __FILE__ ) . 'css/bcswiftype.css', '0.0.0' );
 	wp_enqueue_style( 'bcswiftype_style' );
-	wp_enqueue_script( 'bcswiftype_script' );
 }
 
 add_action('wp_enqueue_scripts', 'bcswiftype_scripts');
