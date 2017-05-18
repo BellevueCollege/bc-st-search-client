@@ -27,9 +27,9 @@ function bcswiftype_shortcode( $sc_config ) {
 		'spelling'         => 'always',
 	), $sc_config, 'bcswiftype_shortcode' );
 
-	require( 'classes/class-bcswiftype-view.php' );
-	require( 'classes/class-bcswiftype-model.php' );
-	require( 'classes/class-bcswiftype-controller.php' );
+	require_once( plugin_dir_path( __FILE__ ) . 'classes/class-bcswiftype-view.php' );
+	require_once( plugin_dir_path( __FILE__ ) . 'classes/class-bcswiftype-model.php' );
+	require_once( plugin_dir_path( __FILE__ ) . 'classes/class-bcswiftype-controller.php' );
 
 	$model = new BCswiftype_Model( $sc_config );
 	$controller = new BCswiftype_Controller( $model );
@@ -40,10 +40,6 @@ function bcswiftype_shortcode( $sc_config ) {
 
 add_shortcode( 'bc-swiftype-search', 'bcswiftype_shortcode' );
 
-/**
- * Enqueue script on pages with shortcode
- * https://mikejolley.com/2013/12/02/sensible-script-enqueuing-shortcodes/
- **/
 function bcswiftype_scripts() {
 	wp_register_style( 'bcswiftype_style', plugin_dir_url( __FILE__ ) . 'css/bcswiftype.css', '0.0.0' );
 	wp_enqueue_style( 'bcswiftype_style' );
