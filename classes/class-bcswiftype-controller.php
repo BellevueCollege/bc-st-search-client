@@ -118,7 +118,6 @@ class BCswiftype_Controller {
 				),
 			);
 		}
-
 		// Do things with WP Instead
 		$data_raw = wp_safe_remote_post(
 			$args['engine_url'],
@@ -128,8 +127,10 @@ class BCswiftype_Controller {
 				'redirection' => 3,
 				'httpversion' => '1.0',
 				'blocking'    => true,
-				'headers'     => array( 'Content-Type: application/json' ),
-				'body'        => $postfields_array,
+				'headers'     => array(
+					'Content-type' => 'application/json',
+				),
+				'body'        => json_encode( $postfields_array ),
 				'compress'    => true,
 				'sslverify'   => true,
 			)
