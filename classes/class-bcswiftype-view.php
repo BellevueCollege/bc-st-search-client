@@ -35,6 +35,11 @@ class BCswiftype_View {
 			$output .= '<p style="margin-top: 1em">Found ' . $this->model->get_attribute( 'total_results' ) . ' results for <strong>' .
 				$query . '</strong> ' . $this->render_sites_filter( $this->model->get_attribute( 'sites' ) ) . '</p>';
 
+			if ( $this->model->get_attribute( 'spelling' ) ) {
+				$spelling = wp_unslash( $this->model->get_attribute( 'spelling' ) );
+				$output .= '<p class="lead">Did you mean <strong><a href="' . $this->page_url( $this->model->get_attribute( 'current_page' ), false, $spelling ) . '">' . $spelling . '</a></strong>?</p>';
+			}
+
 			if ( $this->model->get_results() ) {
 				$output .= '<div id="results-container">' . $this->render_results() . '</div>';
 
@@ -71,13 +76,13 @@ class BCswiftype_View {
 		}
 
 		if ( $atts['current_page'] < $atts['num_pages'] ) {
-			$next_html = '<li><a href="' . $this->page_url( $atts['current_page'] + 1, false ) . '">Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>';
+			$next_html = ' <li><a href="' . $this->page_url( $atts['current_page'] + 1, false ) . '">Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>';
 		} else {
-			$next_html = '<li class="disabled"><a>Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>';
+			$next_html = ' <li class="disabled"><a>Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>';
 		}
 		return  '<nav aria-label="Search Pagination"><ul class="pager">' .
-		$prev_html . $next_html .
-		'</ul></nav>';
+			$prev_html . '<li>&nbsp;' . $atts['current_page'] . '&nbsp;</li>' . $next_html .
+				'</ul></nav>';
 	}
 
 	/**
@@ -146,7 +151,7 @@ HTML;
 	 *
 	 * Accepts page number, and handles generating next and previous page URLs
 	 **/
-	protected function page_url( $page, $strip_sites = false ) {
+	protected function page_url( $page, $strip_sites = false, $new_query = false ) {
 		$query = $_GET;
 		// replace parameter(s)
 		$query[ $this->model->get_setting( 'page_num_peram' ) ] = $page;
@@ -154,6 +159,10 @@ HTML;
 		// strip sites perameters if requested
 		if ( $strip_sites && isset( $query[ $this->model->get_setting( 'site_peram' ) ] ) ) {
 			unset( $query[ $this->model->get_setting( 'site_peram' ) ] );
+		}
+		// New query if requested
+		if ( $new_query && isset( $query[ $this->model->get_setting( 'query_peram' ) ] ) ) {
+			$query[ $this->model->get_setting( 'query_peram' ) ] = $new_query;
 		}
 		// rebuild url
 		$query_result = http_build_query( $query );

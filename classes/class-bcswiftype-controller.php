@@ -168,6 +168,10 @@ class BCswiftype_Controller {
 			);
 		}
 
+		// Process spelling suggestion
+		$spelling = wp_kses( ( isset( $data_array['info']['page']['spelling_suggestion']['text'] ) ? $data_array['info']['page']['spelling_suggestion']['text'] : false ), wp_kses_allowed_html( 'post' ) );
+
+
 		// Restructure Attributes
 		$atts_processed = array(
 			'query'         => sanitize_text_field( $data_array['info']['page']['query'] ),
@@ -176,6 +180,7 @@ class BCswiftype_Controller {
 			'per_page'      => intval( $data_array['info']['page']['per_page'] ),
 			'total_results' => intval( $data_array['info']['page']['total_result_count'] ),
 			'errors'        => $data_array['errors'], // should sanatize if possible
+			'spelling'      => $spelling,
 		);
 
 		// Store to Model
