@@ -18,7 +18,7 @@ array(
 	'query_peram'      => 'txtQuery',
 	'page_num_peram'   => 'pg',
 	'site_peram'       => 'site',
-	'site_api_key'     => 'wp_site_slug',
+	'site_filter_id'     => 'wp_site_slug',
 	'results_per_page' => 10,
 	'engine_url'       => 'http://api.swiftype.com/api/v1/public/engines/search.json',
 	'engine_key'       => '',
@@ -32,7 +32,7 @@ array(
 * `query_peram`: URL perameter used to store search query
 * `page_num_peram`: URL perameter used to store current page number
 * `site_peram`: Array perameter used to store site filters
-* `site_api_key`: Perameter in Swiftype API that you would like the site filter to compare against
+* `site_filter_id`: Perameter in Swiftype API that you would like the site filter to compare against
 * `results_per_page`: How many results to show on each page
 * `engine_url`: URL the plugin should use to access Swiftype's API. This should remain the same for all public search engines.
 * `engine_key`: Public API key
@@ -43,15 +43,10 @@ array(
 ## Search Query URLs
 Certain functionality (namely filtering by site) can only be accessed by creating a custom URL. 
 
-**Note: the structure of strings accepted by the 'site' perameter will changed once we go live. Currently it accepts the site 'slug', this will change the site URL minus the protocol.**
-
-**Examples of change:** 
-Currently to restrict searches to https://www.bellevuecollege.edu/abe/ one would use the `site` attribute "abe". In the future, this will probably use the attribute "www.bellevuecollege.edu/abe" 
-
 ### URL Examples:
 
 Search for 'Test Query' on the sites 'abe' and 'enrollement':
-* https://www.bellevuecollege.edu/search/?txtQuery=Test+Query&site[]=abe&site[]=enrollment
+* https://www.bellevuecollege.edu/search/?txtQuery=Test+Query&site[]=www.bellevuecollege.edu/abe&site[]=www.bellevuecollege.edu/enrollment
 
 Search for 'Test Query' on all sites:
 * https://www.bellevuecollege.edu/search/?txtQuery=Test+Query

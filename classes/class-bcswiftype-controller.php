@@ -114,7 +114,7 @@ class BCswiftype_Controller {
 		if ( $args['sites'] ) {
 			$postfields_array['filters'] = array(
 				'page' => array(
-					$args['site_api_key'] => $args['sites'],
+					$args['site_filter_id'] => $args['sites'],
 				),
 			);
 		}

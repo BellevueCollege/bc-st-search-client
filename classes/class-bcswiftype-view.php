@@ -122,7 +122,7 @@ class BCswiftype_View {
 
 			//Build filter js perams
 			$script_perams = $script_perams .
-			', filters: {"page": {"' . $this->model->get_setting( 'site_api_key' ) . '" : ["' . implode( '", "', $filters ) . '"]}} ';
+			', filters: {"page": {"' . $this->model->get_setting( 'site_filter_id' ) . '" : ["' . implode( '", "', $filters ) . '"]}} ';
 		}
 
 		return <<<HTML
