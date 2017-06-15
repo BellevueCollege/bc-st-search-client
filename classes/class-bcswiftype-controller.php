@@ -165,12 +165,12 @@ class BCswiftype_Controller {
 				'excerpt'  => $excerpt,
 				'url'      => esc_url( $result['url'] ),
 				'updated'  => sanitize_text_field( $result['published_at'] ),
+				'id'       => sanitize_text_field( $result['external_id'] ),
 			);
 		}
 
 		// Process spelling suggestion
 		$spelling = wp_kses( ( isset( $data_array['info']['page']['spelling_suggestion']['text'] ) ? $data_array['info']['page']['spelling_suggestion']['text'] : false ), wp_kses_allowed_html( 'post' ) );
-
 
 		// Restructure Attributes
 		$atts_processed = array(

@@ -94,11 +94,14 @@ class BCswiftype_View {
 		$result_list = '';
 		if ( $this->model->get_results() ) {
 			foreach ( $this->model->get_results() as $result ) {
-				$title = $result['title'];
-				$body = $result['excerpt'];
-				$url = $result['url'];
+				$title   = $result['title'];
+				$body    = $result['excerpt'];
+				$url     = $result['url'];
 				$updated = date( 'F d, Y', strtotime( $result['updated'] ) );
-				$result_list .= "<h2><a href='$url'>$title</a></h2><p class='text-success'>$updated &mdash; $url</p><p>$body</p>";
+				$id      = $result['id'];
+
+				// Build result HTML
+				$result_list .= "<h2><a class='st-result-link' data-stid='$id' href='$url'>$title</a></h2><p class='text-success'>$updated &mdash; $url</p><p>$body</p>";
 			}
 			return $result_list;
 		} else {
@@ -119,10 +122,6 @@ class BCswiftype_View {
 			foreach ( $filters as $filter ) {
 				$filter_tags .= '<input type="hidden" name="' . $this->model->get_setting( 'site_peram' ) . '[]" value="' . $filter . '" />';
 			}
-
-			//Build filter js perams
-			$script_perams = $script_perams .
-			', filters: {"page": {"' . $this->model->get_setting( 'site_filter_id' ) . '" : ["' . implode( '", "', $filters ) . '"]}} ';
 		}
 
 		return <<<HTML
@@ -136,13 +135,6 @@ class BCswiftype_View {
 				</span>
 			</div>
 		</form>
-		<script type="text/javascript">
-			(function ($) {
-				$('#st-search-input').swiftype({ 
-					{$script_perams}
-				});
-			})(jQuery);
-		</script>
 HTML;
 	}
 

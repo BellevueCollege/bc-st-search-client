@@ -18,7 +18,7 @@ array(
 	'query_peram'      => 'txtQuery',
 	'page_num_peram'   => 'pg',
 	'site_peram'       => 'site',
-	'site_filter_id'     => 'wp_site_slug',
+	'site_filter_id'   => 'site_home_url',
 	'results_per_page' => 10,
 	'engine_url'       => 'http://api.swiftype.com/api/v1/public/engines/search.json',
 	'engine_key'       => '',

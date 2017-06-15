@@ -4,7 +4,7 @@ Plugin Name: Swiftype Search Client
 Plugin URI: https://github.com/BellevueCollege/
 Description: Swiftype search client for BC Website
 Author: Bellevue College Integration Team
-Version: 0.0.0.3
+Version: 0.0.0.4
 Author URI: http://www.bellevuecollege.edu
 GitHub Plugin URI: BellevueCollege/bc-st-search-client
 Text Domain: bcswiftype
@@ -34,8 +34,18 @@ function bcswiftype_shortcode( $sc_config ) {
 	$model = new BCswiftype_Model( $sc_config );
 	$controller = new BCswiftype_Controller( $model );
 	$view = new BCswiftype_View( $model );
-	return $view->render_html();
 
+	// Add inline js attributes for script to use
+	$filter_array = is_array( $model->get_attribute( 'sites' ) ) ? '["' . implode( '", "', $model->get_attribute( 'sites' ) ) . '"]': 'false';
+	wp_add_inline_script(
+		'bcswiftype_script',
+		'var st_engine_key = "' . $model->get_setting( 'engine_key' ) .
+		'"; var st_query = "' . stripslashes( $model->get_attribute( 'query' ) ) .
+		'"; var st_site_filter_id = "' . $model->get_setting( 'site_filter_id' ) .
+		'"; var st_filter_array = ' . $filter_array . ';', 'before'
+	);
+
+	return $view->render_html();
 }
 
 add_shortcode( 'bc-swiftype-search', 'bcswiftype_shortcode' );
@@ -43,6 +53,7 @@ add_shortcode( 'bc-swiftype-search', 'bcswiftype_shortcode' );
 function bcswiftype_scripts() {
 	wp_register_style( 'bcswiftype_style', plugin_dir_url( __FILE__ ) . 'css/bcswiftype.css', '0.0.0' );
 	wp_enqueue_style( 'bcswiftype_style' );
+	wp_enqueue_script( 'bcswiftype_script', plugin_dir_url( __FILE__ ) . 'js/bcswiftype.js', array( 'globals' ), '0.0.1', true );
 }
 
 add_action( 'wp_enqueue_scripts', 'bcswiftype_scripts' );
