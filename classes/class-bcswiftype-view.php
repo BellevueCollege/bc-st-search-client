@@ -101,7 +101,7 @@ class BCswiftype_View {
 				$id      = $result['id'];
 
 				// Build result HTML
-				$result_list .= "<h2><a class='st-result-link' data-stid='$id' href='$url'>$title</a></h2><p class='text-success'>$updated &mdash; $url</p><p>$body</p>";
+				$result_list .= "<h2><a class='st-result-link' data-stid='$id' href='$url'>$title</a></h2><p class='text-success'>$url</p><p>$body</p>";
 			}
 			return $result_list;
 		} else {
