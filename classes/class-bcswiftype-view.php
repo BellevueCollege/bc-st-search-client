@@ -33,7 +33,7 @@ class BCswiftype_View {
 		// Results html
 		if ( $this->model->get_attribute( 'query' ) ) {
 			$output .= '<p style="margin-top: 1em">Found ' . $this->model->get_attribute( 'total_results' ) . ' results for <strong>' .
-				$query . '</strong> ' . $this->render_sites_filter( $this->model->get_attribute( 'sites' ) ) . '</p>';
+				esc_html( $query ) . '</strong> ' . $this->render_sites_filter( $this->model->get_attribute( 'sites' ) ) . '</p>';
 
 			if ( $this->model->get_attribute( 'spelling' ) ) {
 				$spelling = wp_unslash( $this->model->get_attribute( 'spelling' ) );
@@ -114,13 +114,14 @@ class BCswiftype_View {
 	 *
 	 * Accept search query and output searchbox HTML
 	 **/
-	protected function render_searchbox( $query = '', $filters ) {
+	protected function render_searchbox( $query_raw = '', $filters ) {
 		$filter_tags = '';
+		$query = esc_textarea( $query_raw );
 		$script_perams = 'engineKey: "' . $this->model->get_setting( 'engine_key' ) . '"';
 		if ( is_array( $filters ) ) {
 			// Build hidden inputs to preserve filter status
 			foreach ( $filters as $filter ) {
-				$filter_tags .= '<input type="hidden" name="' . $this->model->get_setting( 'site_peram' ) . '[]" value="' . $filter . '" />';
+				$filter_tags .= '<input type="hidden" name="' . esc_attr( $this->model->get_setting( 'site_peram' ) ) . '[]" value="' . esc_attr( $filter ) . '" />';
 			}
 		}
 
@@ -171,9 +172,9 @@ HTML;
 		if ( $sites ) {
 			$output = 'on the sites: ';
 			foreach ( $sites as $site ) {
-				$output .= "<span class='label label-default'>$site</span> ";
+				$output .= '<span class="label label-default">' . esc_html( $site ) . '</span>';
 			}
-			$output .= '<a class="btn btn-default btn-xs" href="' . $this->page_url( 1, true ) . '"<span class=""><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> search all</span></a>';
+			$output .= '<a class="btn btn-default btn-xs" href="' . esc_url( $this->page_url( 1, true ) ) . '"<span class=""><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> search all</span></a>';
 			return $output;
 		}
 	}
@@ -190,7 +191,7 @@ HTML;
 		if ( is_array( $this->model->errors ) ) {
 			foreach ( $this->model->errors as $error ) {
 				$error = $error->get_error_message();
-				$error_html .= '<p class="alert alert-danger">' . $error . '</p>';
+				$error_html .= '<p class="alert alert-danger">' . esc_html( $error ) . '</p>';
 				error_log( "Swiftype Search Error: $error ", 0 );
 			}
 		}
@@ -199,7 +200,7 @@ HTML;
 		if ( is_array( $errors ) ) {
 			foreach ( $errors as $error ) {
 				$error = print_r( $error, true );
-				$error_html .= "<div class='alert alert-warning'><strong>Swiftype API Error:</strong> <pre>$error</pre></div>";
+				$error_html .= '<div class="alert alert-warning"><strong>Swiftype API Error:</strong> <pre>' . esc_html( $error ) . '</pre></div>';
 				error_log( "Swiftype Search API Error: $error ", 0 );
 			}
 		}
