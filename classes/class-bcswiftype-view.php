@@ -65,23 +65,42 @@ class BCswiftype_View {
 	 **/
 	protected function render_pagination() {
 		$atts = $this->model->get_attributes();
+		$pages_html = '';
 		$prev_html;
 		$next_html;
 
+		// Build list of pages
+
+		// Max number of pages set to 10
+		$max_pagination = ( 10 >= $atts['num_pages'] ? $atts['num_pages'] : 10 );
+		for ( $i = 1; $i <= $max_pagination; $i++ ) {
+			if ( $i == $atts['current_page'] ) {
+				// Current page is set to active
+				$pages_html .= '<li class="active"><a href="' . $this->page_url( $i, false ) .'">' . $i . '</a></li>';
+			} else if ( ( $i > $atts['current_page'] + 1 || $i < $atts['current_page'] - 3 ) ) {
+				// Class added to hide pages outside of range on mobile
+				$pages_html .= '<li class="hidden-xs"><a href="' . $this->page_url( $i, false ) .'">' . $i . '</a></li>';
+			} else {
+				// Standard page
+				$pages_html .= '<li><a href="' . $this->page_url( $i, false ) .'">' . $i . '</a></li>';
+			}
+		}
 		// Build HTML
 		if ( $atts['current_page'] > 1 ) {
-			$prev_html = '<li><a href="' . $this->page_url( $atts['current_page'] - 1, false ) . '"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Previous</a></li> ';
+			$prev_html = '<li><a href="' . $this->page_url( $atts['current_page'] - 1, false ) . '"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Previous</a></li>';
 		} else {
-			$prev_html = '<li class="disabled"><a><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Previous</a></li> ';
+			$prev_html = '<li class="disabled"><a><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Previous</a></li>';
 		}
 
-		if ( $atts['current_page'] < $atts['num_pages'] ) {
-			$next_html = ' <li><a href="' . $this->page_url( $atts['current_page'] + 1, false ) . '">Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>';
+		if ( $atts['current_page'] < $max_pagination ) {
+			$next_html = '<li><a href="' . $this->page_url( $atts['current_page'] + 1, false ) . '">Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>';
 		} else {
-			$next_html = ' <li class="disabled"><a>Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>';
+			$next_html = '<li class="disabled"><a>Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>';
 		}
-		return  '<nav aria-label="Search Pagination"><ul class="pager">' .
-			$prev_html . '<li>&nbsp;' . $atts['current_page'] . '&nbsp;</li>' . $next_html .
+
+		// Build and return complete HTML element
+		return  '<nav aria-label="Search Pagination" class="text-center"><ul class="pagination">' .
+			$prev_html . $pages_html . $next_html .
 				'</ul></nav>';
 	}
 
