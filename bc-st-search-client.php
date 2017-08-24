@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: Swiftype Search Client
-Plugin URI: https://github.com/BellevueCollege/
+Plugin URI: https://github.com/BellevueCollege/bc-st-search-client
 Description: Swiftype search client for BC Website
 Author: Bellevue College Integration Team
-Version: 0.0.0.6
+Version: 1
 Author URI: http://www.bellevuecollege.edu
 GitHub Plugin URI: BellevueCollege/bc-st-search-client
 Text Domain: bcswiftype
