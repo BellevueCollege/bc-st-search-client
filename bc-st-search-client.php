@@ -93,7 +93,7 @@ function bcswiftype_autofill( WP_REST_Request $request ) {
 		'filters' => $request->get_param( 'filters' ),
 	);
 		
-	$af_data_raw;
+	$af_data_raw = '';
 
 	// Create hash of query
 	$query_hash = 'bcstscaf_' . hash("crc32b", json_encode( $postfields_array ) );
@@ -105,7 +105,7 @@ function bcswiftype_autofill( WP_REST_Request $request ) {
 	if ( $cached_query ) {
 		$af_data_raw = $cached_query;
 
-	} else {
+	} elseif ( strlen( $postfields_array['q'] ) > 2) {
 		$af_data_raw = wp_safe_remote_post(
 			'https://api.swiftype.com/api/v1/public/engines/suggest.json',
 			array(
