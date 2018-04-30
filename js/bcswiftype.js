@@ -8,7 +8,8 @@
 		// Trigger autofill
 		if ( st_filter_array == false ) {
 			$( '#st-search-input' ).swiftype( { 
-				engineKey: st_engine_key
+				engineKey: st_engine_key,
+				typingDelay: 1000
 			} );
 		// Trigger autofill with filter(s)
 		} else {
@@ -18,7 +19,8 @@
 					"page": {
 						st_site_filter_id : st_filter_array
 					}
-				}
+				},
+				typingDelay: 1000
 			} );
 		}
 		// Send search analytics to Swiftype

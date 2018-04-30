@@ -118,23 +118,40 @@ class BCswiftype_Controller {
 				),
 			);
 		}
-		// Do things with WP Instead
-		$data_raw = wp_safe_remote_post(
-			$args['engine_url'],
-			array(
-				'method'      => 'POST',
-				'timeout'     => 2,
-				'redirection' => 3,
-				'httpversion' => '1.0',
-				'blocking'    => true,
-				'headers'     => array(
-					'Content-type' => 'application/json',
-				),
-				'body'        => json_encode( $postfields_array ),
-				'compress'    => true,
-				'sslverify'   => true,
-			)
-		);
+
+		$data_raw;
+
+		// Create hash of query
+		$query_hash = 'bcstsc_' . hash("crc32b", json_encode( $postfields_array ) );
+		
+		// Get cached query results based on hash (false if none)
+		$cached_query = get_transient( $query_hash );
+		
+		// If query is cached, use the cache. If not, set cache.
+		if ( $cached_query ) {
+			$data_raw = $cached_query;
+
+		} else {
+			// Load data the WordPress way
+			$data_raw = wp_safe_remote_post(
+				$args['engine_url'],
+				array(
+					'method'      => 'POST',
+					'timeout'     => 2,
+					'redirection' => 3,
+					'httpversion' => '1.0',
+					'blocking'    => true,
+					'headers'     => array(
+						'Content-type' => 'application/json',
+					),
+					'body'        => json_encode( $postfields_array ),
+					'compress'    => true,
+					'sslverify'   => true,
+				)
+			);
+			set_transient( $query_hash, $data_raw, 60 * 60 * 24 ); // set for 24 hours
+		}
+		
 
 		return $data_raw;
 
