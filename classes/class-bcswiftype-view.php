@@ -145,16 +145,18 @@ class BCswiftype_View {
 		}
 
 		return <<<HTML
-		<form method="GET">
-			<label class="sr-only" for="st-search-input">Search</label>
-			<div class="input-group input-group-lg">
-				{$filter_tags}
-				<input id="st-search-input" type="search" class="form-control" name="{$this->model->get_setting( 'query_peram' )}" value="{$query}" placeholder="What can we help you find?" />
-				<span class="input-group-btn">
-					<button class="btn btn-primary" type="submit">Search</button>
-				</span>
-			</div>
-		</form>
+		<div id="st-search-box">
+			<form method="GET">
+				<label class="sr-only" for="st-search-input">Search</label>
+				<div class="input-group input-group-lg">
+					{$filter_tags}
+					<input id="st-search-input" type="search" class="form-control" name="{$this->model->get_setting( 'query_peram' )}" value="{$query}" placeholder="What can we help you find?" autocomplete="off" />
+					<span class="input-group-btn">
+						<button class="btn btn-primary" type="submit">Search</button>
+					</span>
+				</div>
+			</form>
+		</div>
 HTML;
 	}
 

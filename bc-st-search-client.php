@@ -4,7 +4,7 @@ Plugin Name: Swiftype Search Client
 Plugin URI: https://github.com/BellevueCollege/bc-st-search-client
 Description: Swiftype search client for BC Website
 Author: Bellevue College Integration Team
-Version: 1.0.1
+Version: 1.1.0-dev.1
 Author URI: http://www.bellevuecollege.edu
 GitHub Plugin URI: BellevueCollege/bc-st-search-client
 Text Domain: bcswiftype
@@ -22,6 +22,7 @@ function bcswiftype_shortcode( $sc_config ) {
 		'results_per_page' => 10,
 		'engine_url'       => 'https://api.swiftype.com/api/v1/public/engines/search.json',
 		'engine_key'       => '',
+		'localstorage_key' => 'searchHistory',
 		'title_len'        => 75,
 		'excerpt_len'      => 255,
 		'spelling'         => 'always',
@@ -40,9 +41,10 @@ function bcswiftype_shortcode( $sc_config ) {
 	wp_add_inline_script(
 		'bcswiftype_script',
 		'var st_engine_key = "' . esc_attr( $model->get_setting( 'engine_key' ) ) .
+		'"; var localstorage_key = "' . esc_attr( $model->get_setting( 'localstorage_key' ) ) .
 		'"; var st_query = "' . esc_html( stripslashes( $model->get_attribute( 'query' ) ) ) .
 		'"; var st_site_filter_id = "' . esc_html( $model->get_setting( 'site_filter_id' ) ) .
-		'"; var st_filter_array = ' . esc_html( $filter_array ) . ';', 'before'
+		'"; var st_filter_array = "' . esc_html( $filter_array ) . '";', 'before'
 	);
 
 	return $view->render_html();

@@ -6,11 +6,21 @@
 		 typeof st_filter_array   !== 'undefined' ) {
 
 		// Trigger autofill
-		if ( st_filter_array == false ) {
+		if ( st_filter_array === "false" || st_filter_array === false ) {
 			$( '#st-search-input' ).swiftype( { 
 				engineKey: st_engine_key,
-				typingDelay: 1000
+				typingDelay: 600,
+				renderFunction: function(document_type, item, idx) {
+					return '<p class="title" data-url="'+ item['url'] +'">' + Swiftype.htmlEscape(item['title']) + '</p>';
+				}
 			} );
+
+			// Search History Dropdown
+			$( '#st-search-box' ).searchHistory({
+				field: '#st-search-input',
+				localStorageKey: localstorage_key
+			});
+		
 		// Trigger autofill with filter(s)
 		} else {
 			$( '#st-search-input' ).swiftype( { 
@@ -20,8 +30,17 @@
 						st_site_filter_id : st_filter_array
 					}
 				},
-				typingDelay: 1000
+				typingDelay: 600,
+				renderFunction: function(document_type, item, idx) {
+					return '<p class="title" data-url="'+ item['url'] +'">' + Swiftype.htmlEscape(item['title']) + '</p>';
+				}
 			} );
+
+			// Search History Dropdown
+			$( '#st-search-box' ).searchHistory({
+				field: '#st-search-input',
+				localStorageKey: localstorage_key + '_' + btoa(st_filter_array) // Base 64 encode filter array and append to localstorage key
+			});
 		}
 		// Send search analytics to Swiftype
 		$( 'a.st-result-link' ).click( function( event ) {
