@@ -20,11 +20,12 @@ array(
 	'site_peram'       => 'site',
 	'site_filter_id'   => 'site_home_url',
 	'results_per_page' => 10,
-	'engine_url'       => 'http://api.swiftype.com/api/v1/public/engines/search.json',
+	'engine_url'       => 'https://api.swiftype.com/api/v1/public/engines/search.json',
 	'engine_key'       => '',
+	'localstorage_key' => 'searchHistory',
 	'title_len'        => 75,
 	'excerpt_len'      => 255,
-	'spelling'         => 'always'
+	'spelling'         => 'always',
 )
 
 ```
@@ -36,6 +37,7 @@ array(
 * `results_per_page`: How many results to show on each page
 * `engine_url`: URL the plugin should use to access Swiftype's API. This should remain the same for all public search engines.
 * `engine_key`: Public API key
+* `localstorage_key`: Key used to store search history in LocalStorage. Change this if you are using a different engine key. 
 * `title_len`: Max number of characters allowed in search result titles
 * `excerpt_len`: Max number of characters allowed in search result excerpts
 * `spelling`: Behavior of spell checking- accepts `strict`, `always`, and `retry`. See Swiftype documentation for behavior. **NOTE:** Spell checking is not fully implimented at this time, as it is not a feature that is active on our trial plan.
