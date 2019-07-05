@@ -23,6 +23,7 @@
 		
 		// Trigger autofill with filter(s)
 		} else {
+			console.log('filter!');
 			$( '#st-search-input' ).swiftype( { 
 				engineKey: st_engine_key,
 				filters: {
