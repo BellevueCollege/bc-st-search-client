@@ -32,7 +32,7 @@ class BCswiftype_View {
 
 		// Results html
 		if ( $this->model->get_attribute( 'query' ) ) {
-			$output .= '<p style="margin-top: 1em">Found ' . $this->model->get_attribute( 'total_results' ) . ' results for <strong>' .
+			$output .= '<p class="mt-4">Found ' . $this->model->get_attribute( 'total_results' ) . ' results for <strong>' .
 				esc_html( $query ) . '</strong> ' . $this->render_sites_filter( $this->model->get_attribute( 'sites' ) ) . '</p>';
 
 			if ( $this->model->get_attribute( 'spelling' ) ) {
@@ -76,30 +76,30 @@ class BCswiftype_View {
 		for ( $i = 1; $i <= $max_pagination; $i++ ) {
 			if ( $i == $atts['current_page'] ) {
 				// Current page is set to active
-				$pages_html .= '<li class="active"><a href="' . $this->page_url( $i, false ) .'">' . $i . '</a></li>';
+				$pages_html .= '<li class="active page-item" aria-current="page"><a class="page-link" href="' . $this->page_url( $i, false ) .'">' . $i . '</a></li>';
 			} else if ( ( $i > $atts['current_page'] + 1 || $i < $atts['current_page'] - 3 ) ) {
 				// Class added to hide pages outside of range on mobile
-				$pages_html .= '<li class="hidden-xs"><a href="' . $this->page_url( $i, false ) .'">' . $i . '</a></li>';
+				$pages_html .= '<li class="page-item d-none d-sm-block"><a class="page-link" href="' . $this->page_url( $i, false ) .'">' . $i . '</a></li>';
 			} else {
 				// Standard page
-				$pages_html .= '<li><a href="' . $this->page_url( $i, false ) .'">' . $i . '</a></li>';
+				$pages_html .= '<li class="page-item"><a class="page-link" href="' . $this->page_url( $i, false ) .'">' . $i . '</a></li>';
 			}
 		}
 		// Build HTML
 		if ( $atts['current_page'] > 1 ) {
-			$prev_html = '<li><a href="' . $this->page_url( $atts['current_page'] - 1, false ) . '"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Previous</a></li>';
+			$prev_html = '<li class="page-item"><a class="page-link" href="' . $this->page_url( $atts['current_page'] - 1, false ) . '"><i class="fas fa-chevron-left" aria-hidden="true"></i><span class="sr-only">Previous Page</span></a></li>';
 		} else {
-			$prev_html = '<li class="disabled"><a><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Previous</a></li>';
+			$prev_html = '<li class="page-item disabled"><a class="page-link" aria-disabled="true" href="#"><i class="fas fa-chevron-left" aria-hidden="true"></i><span class="sr-only">Previous Page</span></a></li>';
 		}
 
 		if ( $atts['current_page'] < $max_pagination ) {
-			$next_html = '<li><a href="' . $this->page_url( $atts['current_page'] + 1, false ) . '">Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>';
+			$next_html = '<li class="page-item"><a class="page-link" href="' . $this->page_url( $atts['current_page'] + 1, false ) . '"><i class="fas fa-chevron-right" aria-hidden="true"></i><span class="sr-only">Next Page</span></a></li>';
 		} else {
-			$next_html = '<li class="disabled"><a>Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>';
+			$next_html = '<li class="page-item disabled"><a class="page-link" aria-disabled="true" href="#"><i class="fas fa-chevron-right" aria-hidden="true"></i><span class="sr-only">Next Page</span></a></li>';
 		}
 
 		// Build and return complete HTML element
-		return  '<nav aria-label="Search Pagination" class="text-center"><ul class="pagination">' .
+		return  '<nav aria-label="Search Pagination"><ul class="pagination justify-content-center">' .
 			$prev_html . $pages_html . $next_html .
 				'</ul></nav>';
 	}
