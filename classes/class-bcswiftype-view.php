@@ -99,7 +99,7 @@ class BCswiftype_View {
 		}
 
 		// Build and return complete HTML element
-		return  '<nav aria-label="Search Pagination"><ul class="pagination justify-content-center">' .
+		return  '<nav aria-label="Search Pagination" class="mt-4"><ul class="pagination justify-content-center">' .
 			$prev_html . $pages_html . $next_html .
 				'</ul></nav>';
 	}
@@ -151,7 +151,7 @@ class BCswiftype_View {
 				<div class="input-group input-group-lg">
 					{$filter_tags}
 					<input id="st-search-input" type="search" class="form-control" name="{$this->model->get_setting( 'query_peram' )}" value="{$query}" placeholder="What can we help you find?" autocomplete="off" />
-					<span class="input-group-btn">
+					<span class="input-group-append">
 						<button class="btn btn-primary" type="submit">Search</button>
 					</span>
 				</div>
@@ -193,9 +193,9 @@ HTML;
 		if ( $sites ) {
 			$output = 'on the sites: ';
 			foreach ( $sites as $site ) {
-				$output .= '<span class="label label-default">' . esc_html( $site ) . '</span>';
+				$output .= '<span class="badge badge-dark">' . esc_html( $site ) . '</span> ';
 			}
-			$output .= '<a class="btn btn-default btn-xs" href="' . esc_url( $this->page_url( 1, true ) ) . '"<span class=""><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> search all</span></a>';
+			$output .= '<a class="badge badge-info" href="' . esc_url( $this->page_url( 1, true ) ) . '"><i class="fas fa-minus-circle" aria-hidden="true"></i> search all</a>';
 			return $output;
 		}
 	}
